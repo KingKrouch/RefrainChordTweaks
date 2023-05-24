@@ -1,0 +1,15 @@
+Custom (Scene) > Canvas/CustomMenu Position X (Canvas/RectTransform.anchoredPosition.X divided by 2) (Look for hooks in Ffft.Game.CUiCustomMenu, this differs with the object's parent not inheriting from the Canvas object we need)
+ItemList (Scene) > Canvas/Window_ItemSetting Position X (In the case of 3440x968, it's 1720 divided by 2) (Look for hooks in Ffft.Commons.CitemList)
+CharacterBustup (Scene) > Canvas/BattleBustUp Position X (Canvas/RectTransform.anchoredPositionX divided by 2) (Look for hooks in Ffft.Commons.CUiBustup)
+Ffft.Game.CLibraryCamera > Get Parent Object > Camera > Camera.aspect (Needs to stay at 1.777777777777778 rather than scaling by the display aspect ratio)
+Adv needs it's background components shrunk on the horizontal axis based on 1 * (16:9 / Current Aspect Ratio).
+
+We need a way of hooking UI elements that were only designed with 16:9 in mind to engage pillarboxing.
+
+Ffft.Game.CNavigation > LayoutGroup (Parent Object) > Position.X (In the case of 3440x968, it's 1720 divided by 2) Whenever there's a 16:9 menu. Otherwise, keep at it's original position
+
+WorldMap (Scene)/Canvas/ConfirmDialog/com_ui_Confirm_Window has a fade-in effect that needs to take up the entire screen space, but it's child components and objects stretch if I attempt to adjust the transform directly. There is an image component however that I might be able to get away with adjusting.
+WorldMap (Scene)/Canvas/QuestList/WorldMap_QuestList/BlurFilter_Full > Scale.X can be adjusted to take up the entire screen
+WorldMap (Scene)/Canvas/QuestList/WorldMap_QuestList/wld_thumbnail_Object + QuestDetail + wld_QuestList need to be centered on-screen as they are incorrectly anchored.
+
+I noticed that on the World Map, there's some stuttering as a result of FixedUpdate. This could probably be raised from 0.01 to a divisible factor of the display refresh rate.
