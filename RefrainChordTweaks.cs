@@ -8,7 +8,10 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Ffft.Battle;
+using Ffft.WorldMap;
 using KingKrouch.Utility.Helpers;
+using UnityEngine.Playables;
 
 namespace RefrainChordTweaks
 {
@@ -119,8 +122,8 @@ namespace RefrainChordTweaks
             public static GameObject advInputMgrObject;
             public static InputManager advInputMgrComponent;
             
-            [HarmonyPatch(typeof(SteamManager), "Awake")]
-            [HarmonyPostfix]
+            //[HarmonyPatch(typeof(SteamManager), "Awake")]
+            //[HarmonyPostfix]
             public static void SteamInputPatches(SteamManager __instance)
             {
                 if (!initSteamInputComponent) {
@@ -374,6 +377,13 @@ namespace RefrainChordTweaks
         [HarmonyPatch]
         public class ResolutionPatches
         {
+            [HarmonyPatch(typeof(CBtlCamera), nameof(CBtlCamera.Initialize))]
+            [HarmonyPostfix]
+            public static void FOVPatch(CBtlCamera __instance)
+            {
+                __instance.GetCamera().gateFit = Camera.GateFitMode.Overscan;
+            }
+
             [HarmonyPatch(typeof(CScreenResolutions), nameof(CScreenResolutions.ChangeResolution))]
             [HarmonyPrefix]
             public static bool CustomResolutionOverride(CScreenResolutions __instance, ref CConfigData.ScreenMode i_ScreenMode, ref int i_RefreshRate)
